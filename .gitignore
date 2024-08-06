@@ -15,3 +15,6 @@
 
 # Ignore specific files
 myprogram
+
+# Ignore zip files
+*.zip

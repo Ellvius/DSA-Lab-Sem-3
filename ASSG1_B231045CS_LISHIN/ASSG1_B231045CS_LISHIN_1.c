@@ -272,13 +272,25 @@ void LevelMax(tree *T){
 
 /* DIAMETER OF THE BINARY TREE */
 int height(tree *T){
-    if(T == NULL) return -1;
+    if(T == NULL) return 0;
     return 1 + max( height(T->left), height(T->right));
 }
 
+int maxDiameter(tree *T){
+    if(T==NULL) return 0;
+
+    int lheight = height(T->left);
+    int rheight = height(T->right);
+    int diameter = lheight + rheight + 1;
+
+    int ldiameter = maxDiameter(T->left);
+    int rdiameter = maxDiameter(T->right);
+
+    return max(diameter, max(ldiameter, rdiameter));
+}
+
 void Diameter(tree *T){
-    int diameter;
-    diameter = 2+ height(T->left) + height(T->right);
+    int diameter = maxDiameter(T);
     printf("%d\n", diameter);
 }
 
@@ -320,6 +332,10 @@ int main(){
     // number of nodes
     int n; 
     scanf("%d", &n);
+    if(n>1000000 || n<1){
+        printf("Enter values in range [1, 10^6]\n");
+        return 0;
+    }
 
     // declarations
     int inorder[n], preorder[n], pos;
@@ -330,10 +346,18 @@ int main(){
     // reading values
     for(int i=0; i<n; i++){
         scanf("%d", &inorder[i]);
+        if(inorder[i]>1000000 || inorder[i]<1){
+            printf("Enter values in range [1, 10^6]\n");
+            break;
+        }
     }
  
     for(int i=0; i<n; i++){
         scanf("%d", &preorder[i]);
+        if(preorder[i]>1000000 || preorder[i]<1){
+            printf("Enter values in range [1, 10^6]\n");
+            break;
+        }
     }
 
     // create a binary tree with the given inorder and preorder traversal
