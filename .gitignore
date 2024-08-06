@@ -1,0 +1,17 @@
+# Ignore compiled files
+*.o
+*.out
+*.exe
+
+# Ignore log files
+*.log
+
+# Ignore temporary files
+*.tmp
+*.swp
+
+# Ignore build directory
+/build
+
+# Ignore specific files
+myprogram
