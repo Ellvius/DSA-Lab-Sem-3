@@ -46,7 +46,7 @@ int isBalance(node *root){
 
 
 /* Left rotate and right rotate functions for nodes */
-node *leftRotate(node *root){
+node *leftRotate(node *root, int *leftrot){
     node *x = root->right;
     node *y = x->left;
     root->right = y;
@@ -54,10 +54,12 @@ node *leftRotate(node *root){
 
     root->height = max(height(root->left), height(root->right)) + 1;
     x->height = max(height(x->left), height(x->right)) + 1;
+
+    (*leftrot)++;
     return x;
 }
 
-node *rightRotate(node *root){
+node *rightRotate(node *root, int *rightrot){
     node *x = root->left;
     node *y = x->right;
     root->left = y;
@@ -65,11 +67,13 @@ node *rightRotate(node *root){
 
     root->height = max(height(root->left), height(root->right)) + 1;
     x->height = max(height(x->left), height(x->right)) + 1;
+
+    (*rightrot)++;
     return x;
 }
 
 /* Function to insert a new node and balance it at the same time */
-node *AVL_insert(node *T,int n){
+node *AVL_insert(node *T,int n, int *lr, int *rr){
 
     // Incase the tree is empty
     if(T == NULL){
@@ -78,28 +82,28 @@ node *AVL_insert(node *T,int n){
 
     // Find the correct subtree to insert
     if(n < T->data){
-        T->left= AVL_insert(T->left, n);
+        T->left= AVL_insert(T->left, n, lr, rr);
         
         if(!isBalance(T)){  
             if(n < T->left->data){              // LL
-                return rightRotate(T);      
+                return rightRotate(T,rr);      
             }
             else {                              // LR
-                T->left = leftRotate(T->left);
-                return rightRotate(T);
+                T->left = leftRotate(T->left, lr);
+                return rightRotate(T, rr);
             }
         }
     }
     else {
-        T->right = AVL_insert(T->right, n);
+        T->right = AVL_insert(T->right, n, lr , rr);
 
         if(!isBalance(T)){
             if(n > T->right->data){             // RR
-                return leftRotate(T);
+                return leftRotate(T, lr);
             }
             else {                              // RL
-                T->right = rightRotate(T->right);
-                return leftRotate(T);
+                T->right = rightRotate(T->right, rr);
+                return leftRotate(T, lr);
             }
         }
     }
@@ -153,7 +157,9 @@ void AVL_postorder(node *T){
     printf("%d ", T->data);
 }
 
-// node AVL_rotations(node *T);
+void AVL_rotations(node *T, int lr, int rr){
+    printf("%d %d\n", lr, rr);
+}
 
 // node AVL_delete(node *T,int n);
 
@@ -172,6 +178,7 @@ void AVL_balanceFactor(node *T,int n){
 int main(){
     node *T = NULL;
     
+    int leftRotation = 0, rightRotation = 0;
     char op;
     int num;
     
@@ -179,7 +186,7 @@ int main(){
         scanf(" %c", &op);
         if(op == 'i'){
             scanf("%d", &num);
-            T= AVL_insert(T,num);
+            T= AVL_insert(T,num, &leftRotation, &rightRotation);
         }
         else if(op == 'f'){
             scanf("%d", &num);
@@ -189,9 +196,9 @@ int main(){
             AVL_postorder(T);
             printf("\n");
         }
-        // else if(op == 's'){
-        //     AVL_rotations(T);
-        // }
+        else if(op == 's'){
+            AVL_rotations(T, leftRotation, rightRotation);
+        }
         // else if(op == 'd'){
         //     scanf("%d", &num);
         //     AVL_delete(T,num);
