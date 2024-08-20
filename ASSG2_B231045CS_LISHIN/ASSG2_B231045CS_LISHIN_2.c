@@ -112,6 +112,18 @@ node *Insert(node *K,int k, int val){
     return K;
 }
 
+
+/*  Check whether the ordered map is empty or not K. */
+void Empty(node *K){
+    if(K == NULL){
+        printf("1\n");
+    }
+    else {
+        printf("0\n");
+    }
+}
+
+
 /* function to check whether the value is there in the tree or not */
 // node *isPresent(node *T, int n){
 //     if(T == NULL){
@@ -182,9 +194,9 @@ int main(){
         // else if(op == 's'){
         //     Size(K)
         // }
-        // else if(op == 'e'){
-        //     Empty(K);
-        // }
+        else if(op == 'e'){
+            Empty(K);
+        }
         else if(op == 'd'){
             if(K==NULL){
                 printf("-1\n");
