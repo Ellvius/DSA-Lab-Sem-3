@@ -124,6 +124,14 @@ void Empty(node *K){
 }
 
 
+/* Prints the number of key-value pairs in ordered map K. */
+int Size(node *K){
+    if(K == NULL){
+        return 0;
+    }
+
+    return 1 + Size(K->left) + Size(K->right);
+}
 /* function to check whether the value is there in the tree or not */
 // node *isPresent(node *T, int n){
 //     if(T == NULL){
@@ -175,6 +183,7 @@ int main(){
     node *K = NULL;
     char op;
     int key= 0 , value = 0;
+    int size = 0;
     
     while(1){
         scanf(" %c", &op);
@@ -191,9 +200,10 @@ int main(){
         //     scanf("%d", &key);
         //     Find(K,key);
         // }
-        // else if(op == 's'){
-        //     Size(K)
-        // }
+        else if(op == 's'){
+            size = Size(K);
+            printf("%d\n", size);
+        }
         else if(op == 'e'){
             Empty(K);
         }
