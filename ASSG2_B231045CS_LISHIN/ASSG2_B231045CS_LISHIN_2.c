@@ -79,10 +79,11 @@ node *Insert(node *K,int k, int val){
         return createNode(k, val);
     }
 
-    // if(K->key == k){
-    //     K->value = val;
-    //     return K;
-    // }
+    // rewrite duplicate key value pair
+    if(K->key == k){
+        K->value = val;
+        return K;
+    }
 
     // Find the correct subtree to insert
     if(k < K->key){
