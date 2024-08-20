@@ -132,43 +132,24 @@ int Size(node *K){
 
     return 1 + Size(K->left) + Size(K->right);
 }
-/* function to check whether the value is there in the tree or not */
-// node *isPresent(node *T, int n){
-//     if(T == NULL){
-//         return T;
-//     }
-//     if(T->key == n){
-//         return T;
-//     }
-//     else if(n < T->key){
-//         return isPresent(T->left, n);
-//     } 
-//     else {
-//         return isPresent(T->right, n);
-//     }
-// }
 
-// /* Function to print the path of the node if it is present in the tree */
-// void Find(node *T,int n){
-//     if(isPresent(T,n)!= NULL){
-//         if(T->data == n ){
-//             printf("%d\n", n);
-//             return;
-//         }
-//         else if(n < T->data){
-//             printf("%d ", T->data);
-//             Find(T->left, n);
-//         }
-//         else {
-//             printf("%d ", T->data);
-//             Find(T->right, n);
-//         }
-//     }
-//     else {
-//         printf("-1\n");
-//     }
-    
-// }
+
+/* Searches for a key in the ordered map K. */
+node *Find(node *K,int k){
+    if(K == NULL){
+        return K;
+    }
+    else if(k < K->key){
+        return Find(K->left, k);
+    }
+    else if(k > K->key){
+        return Find(K->right, k);
+    }
+    else {
+        return K;
+    }
+}
+
 
 /* Display all the keys in the ordered map K in descending order. */
 void DisplayElements(node *K){
@@ -177,6 +158,12 @@ void DisplayElements(node *K){
     printf("%d ", K->key);
     DisplayElements(K->left);
 }
+
+
+/* Among all those elements in K having the key not less than the given key, print the key-value pair of the one with the minimum key. */
+// node *UpperBound(node* K, int key){
+
+// }
 
 
 int main(){
@@ -196,10 +183,16 @@ int main(){
         //     scanf("%d", &key);
         //     UpperBound(K, key);
         // }
-        // else if(op == 'f'){
-        //     scanf("%d", &key);
-        //     Find(K,key);
-        // }
+        else if(op == 'f'){
+            scanf("%d", &key);
+            node *knode = Find(K,key);
+            if(knode == NULL){
+                printf("-1\n");
+            }
+            else {
+                printf("%d %d\n", knode->key, knode->value);
+            }
+        }
         else if(op == 's'){
             size = Size(K);
             printf("%d\n", size);
