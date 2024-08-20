@@ -110,12 +110,12 @@ node *AVL_insert(node *T,int n){
 }
 
 /* function to check whether the value is there in the tree or not */
-int isPresent(node *T, int n){
+node *isPresent(node *T, int n){
     if(T == NULL){
-        return 0;
+        return T;
     }
     if(T->data == n){
-        return 1;
+        return T;
     }
     else if(n < T->data){
         return isPresent(T->left, n);
@@ -126,7 +126,7 @@ int isPresent(node *T, int n){
 }
 
 void AVL_find(node *T,int n){
-    if(isPresent(T,n)){
+    if(isPresent(T,n)!= NULL){
         if(T->data == n ){
             printf("%d\n", n);
             return;
@@ -157,7 +157,17 @@ void AVL_postorder(node *T){
 
 // node AVL_delete(node *T,int n);
 
-// node AVL_balanceFactor(node *T,int n);
+/* Function to print the balance factor of a given node  */
+void AVL_balanceFactor(node *T,int n){
+    node *tnode = isPresent(T,n);
+    if(tnode == NULL){
+        printf("-1\n");
+        return;
+    }
+    int balanceFactor = height(tnode->left) - height(tnode->right);
+    printf("%d\n", balanceFactor);
+}
+
 
 int main(){
     node *T = NULL;
@@ -186,10 +196,10 @@ int main(){
         //     scanf("%d", &num);
         //     AVL_delete(T,num);
         // }
-        // else if(op == 'b'){
-        //     scanf("%d", &num);
-        //     AVL_balanceFactor(T,num);
-        // }
+        else if(op == 'b'){
+            scanf("%d", &num);
+            AVL_balanceFactor(T,num);
+        }
         else if(op == 'e'){
             break;
         }
