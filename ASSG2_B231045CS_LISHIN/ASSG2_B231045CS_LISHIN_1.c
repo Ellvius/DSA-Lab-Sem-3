@@ -109,7 +109,42 @@ node *AVL_insert(node *T,int n){
     return T;
 }
 
-// node AVL_find(node *T,int n);
+/* function to check whether the value is there in the tree or not */
+int isPresent(node *T, int n){
+    if(T == NULL){
+        return 0;
+    }
+    if(T->data == n){
+        return 1;
+    }
+    else if(n < T->data){
+        return isPresent(T->left, n);
+    } 
+    else {
+        return isPresent(T->right, n);
+    }
+}
+
+void AVL_find(node *T,int n){
+    if(isPresent(T,n)){
+        if(T->data == n ){
+            printf("%d\n", n);
+            return;
+        }
+        else if(n < T->data){
+            printf("%d ", T->data);
+            AVL_find(T->left, n);
+        }
+        else {
+            printf("%d ", T->data);
+            AVL_find(T->right, n);
+        }
+    }
+    else {
+        printf("-1\n");
+    }
+    
+}
 
 void AVL_postorder(node *T){
     if(T==NULL) return;
@@ -136,10 +171,10 @@ int main(){
             scanf("%d", &num);
             T= AVL_insert(T,num);
         }
-        // else if(op == 'f'){
-        //     scanf("%d", &num);
-        //     AVL_find(T,num);
-        // }
+        else if(op == 'f'){
+            scanf("%d", &num);
+            AVL_find(T,num);
+        }
         else if(op == 'p'){
             AVL_postorder(T);
             printf("\n");
