@@ -129,6 +129,7 @@ node *isPresent(node *T, int n){
     }
 }
 
+/* Function to print the path of the node if it is present in the tree */
 void AVL_find(node *T,int n){
     if(isPresent(T,n)!= NULL){
         if(T->data == n ){
@@ -150,6 +151,27 @@ void AVL_find(node *T,int n){
     
 }
 
+/* Function to print ancestors*/
+void AVL_ancestor(node *T, int n){
+        if (T == NULL){
+            return;
+        }
+        if(T->data == n ){
+            printf("%d ", n);
+            return;
+        }
+        else if(n < T->data){
+            AVL_ancestor(T->left, n);
+        }
+        else {
+            AVL_ancestor(T->right, n);
+        }
+        printf("%d ", T->data);
+
+}
+
+
+/* Postorder traveral function */
 void AVL_postorder(node *T){
     if(T==NULL) return;
     AVL_postorder(T->left);
@@ -157,11 +179,96 @@ void AVL_postorder(node *T){
     printf("%d ", T->data);
 }
 
+
+/* Prints the number of left rotations and right rotations taken to balance the tree so far */
 void AVL_rotations(node *T, int lr, int rr){
     printf("%d %d\n", lr, rr);
 }
 
-// node AVL_delete(node *T,int n);
+
+/* function to delete the node in an avl tree */
+node *delete(node *T,int n, int *lr, int *rr){
+
+    if(T == NULL) {
+        return T;
+    }
+    if( n < T->data){
+        T->left = delete(T->left, n, lr, rr);
+    }
+    else if(n > T->data){
+        T->right = delete(T->right, n, lr, rr);
+    }
+   // we reach the node
+    else {
+        if (T->left == NULL && T->right == NULL) { // Case 1: The node has no childrenII
+            node *temp = T;
+            T = NULL;  
+            free(temp);  
+        }
+        else if (T->left == NULL) {             // Case 2: The node has only a right child
+            node *temp = T;
+            T = T->right;  
+            free(temp);  
+        }
+        else if (T->right == NULL) {            // Case 2: The node has only a left child
+            node *temp = T;
+            T = T->left;  
+            free(temp);  
+        }
+        else {                                      // case 3 : The node has both children
+            node *temp = T->right;
+            while(temp->left != NULL){
+                temp = temp->left;
+            }
+            T->data = temp->data;
+            T->right = delete(T->right, temp->data, lr, rr);
+        }
+    
+    }
+
+    if(T==NULL){
+        return T;
+    }
+
+    // Updating the heights of the deleted node
+    T->height = 1+ max(height(T->left), height(T->right));
+
+    if(!isBalance(T)){
+        int balfactor = height(T->left) - height(T->right);
+        if(balfactor > 1 && height(T->left->left) >= height(T->left->right)){  // left left
+            return rightRotate(T, rr);
+        }
+
+        if(balfactor > 1 && height(T->left->left) < height(T->left->right)){
+            T->left = leftRotate(T->left, lr);
+            return rightRotate(T, rr);
+        }
+
+        if(balfactor < -1 && height(T->right->left)<= height(T->right->right)){
+            return leftRotate(T, lr);
+        }
+
+        if(balfactor < -1 && height(T->right->left)> height(T->right->right)){
+            T->right = rightRotate(T->right, rr);
+            return leftRotate(T, lr);
+        }
+    }
+   
+   return T;
+
+}
+
+/* Function to delete and print its ancestors */
+node *AVL_delete(node *T, int n, int *lr, int *rr ){
+    if(isPresent(T,n)!= NULL){
+        AVL_ancestor(T,n);
+        T = delete(T,n,lr,rr);
+    }
+    else {
+        printf("-1\n");       
+    }
+    return T;
+}
 
 /* Function to print the balance factor of a given node  */
 void AVL_balanceFactor(node *T,int n){
@@ -199,10 +306,11 @@ int main(){
         else if(op == 's'){
             AVL_rotations(T, leftRotation, rightRotation);
         }
-        // else if(op == 'd'){
-        //     scanf("%d", &num);
-        //     AVL_delete(T,num);
-        // }
+        else if(op == 'd'){
+            scanf("%d", &num);
+            T = AVL_delete(T,num, &leftRotation, &rightRotation);
+            printf("\n");
+        }
         else if(op == 'b'){
             scanf("%d", &num);
             AVL_balanceFactor(T,num);
