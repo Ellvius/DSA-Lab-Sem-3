@@ -79,6 +79,11 @@ node *Insert(node *K,int k, int val){
         return createNode(k, val);
     }
 
+    // if(K->key == k){
+    //     K->value = val;
+    //     return K;
+    // }
+
     // Find the correct subtree to insert
     if(k < K->key){
         K->left= Insert(K->left, k, val);
@@ -161,9 +166,33 @@ void DisplayElements(node *K){
 
 
 /* Among all those elements in K having the key not less than the given key, print the key-value pair of the one with the minimum key. */
-// node *UpperBound(node* K, int key){
+void UpperBound(node* K, int k){
+    node *newNode = Find(K, k);
 
-// }
+    // case: The node is not present in the tree
+    if(newNode == NULL){
+        node* smallNode = NULL;
+
+        while ( K != NULL){
+            if(k < K->key){
+                smallNode = K;
+                K = K->left;
+            }
+            else {
+                K = K->right;
+            }
+        }
+        if(smallNode == NULL){
+            printf("-1\n");
+            return;
+        }
+        printf("%d %d\n", smallNode->key, smallNode->value);
+    }
+    else {
+        printf("%d %d\n", newNode->key, newNode->value);
+    }
+    
+}
 
 
 int main(){
@@ -179,10 +208,10 @@ int main(){
             scanf("%d", &value);
             K= Insert(K,key, value);
         }
-        // else if(op == 'u'){
-        //     scanf("%d", &key);
-        //     UpperBound(K, key);
-        // }
+        else if(op == 'u'){
+            scanf("%d", &key);
+            UpperBound(K, key);
+        }
         else if(op == 'f'){
             scanf("%d", &key);
             node *knode = Find(K,key);
