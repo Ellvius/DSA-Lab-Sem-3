@@ -380,6 +380,7 @@ node* Path(node *K,int k){
 void AVL_SuccessorPath(node *T, int n){
     if(T== NULL){
         printf("0\n");
+        return;
     }
     node* temp = successor(T, n);
     int height = -1;
