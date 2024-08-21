@@ -1,54 +1,96 @@
-#include<stdio.h>
+#include <stdio.h>
 #include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
 
-/* Insert a sequence of keys [n1, n2, ..., nk] into the AVL tree T. Perform necessary rotations to maintain AVL properties after each insertion. After all insertions, print the paranthesis representation of resulting AVL tree.*/
-AVL_SeqInsert(T, [n1, n2, ..., nk]);
+/* Struct declaration for AVL tree nodes */
+typedef struct avl_node {
+    int key;
+    int height;
+    struct avl_node *left, *right;
+} node;
 
-/* Delete all keys in the AVL tree T that are within the range [n1, n2] (inclusive). Perform necessary rotations to maintain AVL properties after each deletion. After performing all deletions, print the total number of nodes deleted and preorder
-traversal of the tree T after all deletions. */
-AVL_RangeDelete(T, n1, n2);
+/* Function to create an AVL node with a given value */
+node *createNode(int k) {
+    node *newNode = (node *)malloc(sizeof(node));
+    newNode->key = k;
+    newNode->left = NULL;
+    newNode->right = NULL;
+    newNode->height = 1;
 
-/* For a given key n, find its inorder successor in T. Print the path from the root to the inorder successor (including the successor itself). If n does not exist or has no successor, return the height of T.*/
-AVL_SuccessorPath(T, n);
+    return newNode;
+}
 
-/*  For a given key n, print the sum of all keys in the subtree rooted at n and the parenthesis representation of the corresponding subtree rooted at n. If n is not present in T, print −1.*/
-AVL_SubtreeSum(T, n);
+/* Function to parse an integer from the string */
+int num(char s[], int* index) {
+    int n = 0;
+    while (isdigit(s[*index])) {
+        n = 10 * n + (s[*index] - '0');
+        (*index)++;
+    }
+    (*index)++;
+    return n;
 
-/* Given a key n, find and print the closest key in T (the key with the minimum absolute difference from n). If there are multiple such keys present, print the smallest among them. If n is not found in T, or the closest key of n is not present (T has only one node and it is n), then print −1.
-Note: closest key of n cannot be itself */
-AVL_FindClosest(T, n);
+}
 
+/* Function to construct the tree from the parenthesis representation */
+node *parenthesisToTree(char s[], int *index) {
+    if (s[*index] == '\n' || s[*index] == ')' || s[*index] == '\0') {
+        return NULL;
+    }
 
-int main(){
-    char op;
-    int n1, n2, n;
-    
-    while(1){
-        scanf(" %c", &op);
-        if(op == 'a'){
-            AVL_SeqInsert(T, [n1, n2, ..., nk]);
+    if (s[*index] == ' ') {
+        (*index)++;
+    }
+
+    if(s[*index] == ')'){
+        return NULL;
+    }
+    // parse the number and create node
+    int number = num(s, index);
+    node *newNode = createNode(number);
+
+    // If there are more elements, look for children
+    if (s[*index] == '(') {
+        (*index)++;
+        newNode->left = parenthesisToTree(s, index);
+        if (s[*index] == ')') {
+            (*index)+=2;  // Move past the closing parenthesis
         }
-        else if(op == 'b'){
-            scanf("%d", &n1);
-            scanf("%d", &n2);
-            AVL_RangeDelete(T, n1, n2);
-        }
-        else if(op == 'c'){
-            scanf("%d", &n);
-            AVL_SuccessorPath(T, n);
-        }
-        else if(op == 'd'){
-            scanf("%d", &n);
-            AVL_SubtreeSum(T, n);
-        }
-        else if(op == 'e'){
-            scanf("%d", &n);
-            AVL_FindClosest(T, n);
-        }
-        else if(op == 'g'){
-            break;
+
+        if (s[*index] == '(') {
+            (*index)++;
+            newNode->right = parenthesisToTree(s, index);
+            if (s[*index] == ')') {
+                (*index)+=2;  // Move past the closing parenthesis
+            }
         }
     }
 
+    return newNode;
+}
+
+/* Preorder traversal of the tree */
+void preorder(node *root) {
+    if (root != NULL) {
+        printf("%d ", root->key);
+        preorder(root->left);
+        preorder(root->right);
+    }
+}
+
+/* Main function */
+int main() {
+    char parenthesis[1000];
+    node *T = NULL;
+    int index = 0;
+
+    fgets(parenthesis, 1000, stdin);
+    T = parenthesisToTree(parenthesis, &index);
+
+    // Print the tree using preorder traversal
+    preorder(T);
+
     return 0;
 }
+
