@@ -520,9 +520,10 @@ int main() {
             }
             else {
                 printf("%d ", count);
+                preorder(T);
+                printf("\n");
             }
-            preorder(T);
-            printf("\n");
+            
         }
         else if(op == 'c'){
             scanf("%d", &n);
