@@ -257,6 +257,120 @@ void preorder(node *root) {
     }
 }
 
+// function to find the inorder successor
+node* successor(node *root, int key){
+	node *temp = root;
+	node *parent = NULL;
+	
+	while(temp != NULL && temp->key != key){
+		//In case the node does not have a right subtree we have tgo track its parent
+		if(temp->key > key){
+			parent = temp;
+			temp = temp->left;
+		}
+		else {
+			temp = temp->right;
+		}
+	}
+	
+	// In case the node is not present in the tree
+	if(temp == NULL){
+		return NULL;
+	}
+	
+	// If the node has a right subtree
+	if(temp->right != NULL){
+		//find the minimum node in the right subtree
+		node *min = temp->right;
+		while(min->left != NULL)
+			min = min->left;
+			
+		return min;
+	}
+	
+	// If the node doesn't have a right subtree 
+	else {
+		// If the node is the last node 
+		if(parent == NULL)
+            return NULL;
+		else
+			return parent;
+	}
+}
+
+/* prints the path to a node k */
+node* Path(node *K,int k){
+    if(K == NULL){
+        return K;
+    }
+    else if(k < K->key){
+        printf("%d ", K->key);
+        return Path(K->left, k);
+    }
+    else if(k > K->key){
+        printf("%d ", K->key);
+        return Path(K->right, k);
+    }
+    else {
+        printf("%d ", K->key);
+        return K;
+    }
+}
+
+void AVL_SuccessorPath(node *T, int n){
+    node* temp = successor(T, n);
+    int height = -1;
+    if(temp == NULL){
+        printf("%d\n", T->height-1); // remove -1 if it is no of nodes
+        return;
+    }
+    else {
+        Path(T, temp->key);
+        printf("\n");
+    }
+}
+
+/* Searches for a key in the ordered map K. */
+node *Find(node *K,int k){
+    if(K == NULL){
+        return K;
+    }
+    else if(k < K->key){
+        return Find(K->left, k);
+    }
+    else if(k > K->key){
+        return Find(K->right, k);
+    }
+    else {
+        return K;
+    }
+}
+
+/* Function to find the sum of all the nodes rooted at node root*/
+void treeSum(node *root, int *sum){
+    if(root == NULL) return;
+    treeSum(root->left, sum);
+    treeSum(root->right, sum);
+    *sum = (*sum) + root->key;
+}
+
+
+void AVL_SubtreeSum(node *T,int n){
+    node *temp = Find(T, n);
+    int sum = 0;
+    if(temp == NULL){
+        printf("-1\n");
+        return;
+    }
+    else {
+        treeSum(temp, &sum );
+        printf("%d ", sum);
+        preorderPar(temp);
+        printf("\n");
+    }
+}
+
+
 /* Main function */
 int main() {
     char op, sp;
@@ -298,14 +412,14 @@ int main() {
             preorder(T);
             printf("\n");
         }
-        // else if(op == 'c'){
-        //     scanf("%d", &n);
-        //     AVL_SuccessorPath(T, n);
-        // }
-        // else if(op == 'd'){
-        //     scanf("%d", &n);
-        //     AVL_SubtreeSum(T, n);
-        // }
+        else if(op == 'c'){
+            scanf("%d", &n);
+            AVL_SuccessorPath(T, n);
+        }
+        else if(op == 'd'){
+            scanf("%d", &n);
+            AVL_SubtreeSum(T, n);
+        }
         // else if(op == 'e'){
         //     scanf("%d", &n);
         //     AVL_FindClosest(T, n);
