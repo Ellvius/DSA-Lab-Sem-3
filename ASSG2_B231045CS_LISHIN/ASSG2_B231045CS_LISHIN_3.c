@@ -438,6 +438,10 @@ void AVL_SubtreeSum(node *T,int n){
 
 /* Function to find the closest node to the given node and print -1 if the given node is not present */
 void AVL_FindClosest(node* T,int n){
+    if(T == NULL){
+        printf("-1\n");
+        return;
+    }
     if(T->key == n){
         printf("-1\n");
         return;
