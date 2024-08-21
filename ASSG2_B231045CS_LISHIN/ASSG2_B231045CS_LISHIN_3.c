@@ -67,6 +67,7 @@ node *rightRotate(node *root){
     return x;
 }
 
+/* Inserts the given sequence of integers to the existing avl tree */
 node *AVL_SeqInsert(node *T,int n){
 
     // Incase the tree is empty
@@ -256,6 +257,7 @@ node *delete(node *T,int n, int *count){
    return T;
 }
 
+/* Deletes the nodes in the given range and updates its imbalance */
 node* AVL_RangeDelete(node *root, int n1, int n2, int *count){
     for(int i =n1; i<=n2; i++){
         root = delete(root, i, count);
@@ -313,6 +315,48 @@ node* successor(node *root, int key){
 	}
 }
 
+/* Function to find the predecessor */
+node* predecessor(node *root, int key){
+	node *temp = root;
+	node *parent = NULL;
+	
+	while(temp != NULL && temp->key != key){
+		//In case the node does not have a left subtree we have to track its parent
+		if(temp->key < key){
+			parent = temp;
+			temp = temp->right;
+		}
+		else {
+			temp = temp->left;
+		}
+	}
+	
+	// In case the node is not present in the tree
+	if(temp == NULL){
+		return temp;
+	}
+	
+	// If the node has a left subtree
+	if(temp->left != NULL){
+		//find the maximum node in the left subtree
+		node *max = temp->left;
+		while(max->right != NULL)
+			max = max->right;
+        
+        return max;
+	}
+	
+	// If the node doesn't have a left subtree 
+	else {
+		// If the node is the last node 
+		if(parent == NULL)
+			return NULL;
+		else
+			return parent;
+	}
+}
+
+
 /* prints the path to a node k */
 node* Path(node *K,int k){
     if(K == NULL){
@@ -332,6 +376,7 @@ node* Path(node *K,int k){
     }
 }
 
+/* Prints the path of the successor if it exist. Else prints the height of the tree */
 void AVL_SuccessorPath(node *T, int n){
     node* temp = successor(T, n);
     int height = -1;
@@ -370,6 +415,8 @@ void treeSum(node *root, int *sum){
 }
 
 
+/* Function to print the sum of all nodes of the subtree rooted at given node and print its parenthesis form.
+    If the node is not present print -1. */
 void AVL_SubtreeSum(node *T,int n){
     node *temp = Find(T, n);
     int sum = 0;
@@ -385,6 +432,44 @@ void AVL_SubtreeSum(node *T,int n){
     }
 }
 
+/* Function to find the closest node to the given node and print -1 if the given node is not present */
+void AVL_FindClosest(node* T,int n){
+    if(T->key == n){
+        printf("-1\n");
+        return;
+    }
+
+    node *temp = Find(T, n);
+    if(temp == NULL){
+        printf("-1\n");
+        return;
+    }
+
+    node *scr = successor(T, n);
+    node *pcr = predecessor(T, n);
+
+    if(scr == NULL && pcr != NULL){
+        printf("%d\n", pcr->key);
+        return;
+    }
+    if(pcr == NULL && scr != NULL){
+        printf("%d\n", scr->key);
+    }
+
+    int scr_dif = scr->key - n;
+    int pcr_dif = n - pcr->key;
+
+    if(scr_dif < pcr_dif){
+        printf("%d\n", scr->key);
+    }
+    else if(scr_dif > pcr_dif){
+        printf("%d\n", pcr->key);
+    }
+    else {
+        printf("%d\n", pcr->key);
+    }
+
+}
 
 /* Main function */
 int main() {
@@ -399,9 +484,6 @@ int main() {
     fgets(parenthesis, 1000, stdin);
     T = parenthesisToTree(parenthesis, &index);
 
-    // Print the tree using preorder traversal
-    preorder(T);
-    printf("\n");
     while(1){
         scanf(" %c", &op);
         if (op == 'a') {
@@ -435,10 +517,10 @@ int main() {
             scanf("%d", &n);
             AVL_SubtreeSum(T, n);
         }
-        // else if(op == 'e'){
-        //     scanf("%d", &n);
-        //     AVL_FindClosest(T, n);
-        // }
+        else if(op == 'e'){
+            scanf("%d", &n);
+            AVL_FindClosest(T, n);
+        }
         else if(op == 'g'){
             break;
         }
