@@ -390,7 +390,7 @@ void AVL_SuccessorPath(node *T, int n){
     }
 }
 
-/* Searches for a key in the ordered map K. */
+/* Searches for a key in the tree. */
 node *Find(node *K,int k){
     if(K == NULL){
         return K;
@@ -491,7 +491,13 @@ int main() {
                 scanf("%c", &sp);
                 if(sp == '\n') break;
                 scanf("%d", &n);
-                T = AVL_SeqInsert(T, n);
+                if(n<1){
+                    continue;
+                }
+                node *temp = Find(T,n);
+                if(temp == NULL){
+                    T = AVL_SeqInsert(T, n);
+                }
             }
             preorderPar(T);
             printf("\n");
