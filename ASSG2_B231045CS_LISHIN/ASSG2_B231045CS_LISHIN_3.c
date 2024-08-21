@@ -109,13 +109,28 @@ node *AVL_SeqInsert(node *T,int n){
 
 /* Function to print the subtrees in preorder traversal in parenthesis notation */
 void preorderPar(node *root){
-	printf("( ");
-	if(root != NULL){
-		printf("%d ", root->key);
-		preorderPar(root->left);
-		preorderPar(root->right);
-	}
-	printf(") ");
+    if(root->left == NULL && root->right == NULL){
+        printf("%d ", root->key);
+        return;
+    }
+	if (root == NULL) {
+        printf(" ");
+        return;
+    }
+
+    printf("%d", root->key);
+    
+    printf(" ( ");
+    if (root->left != NULL) {
+        preorderPar(root->left);
+    }
+    printf(") ");
+
+    printf("( ");
+    if (root->right != NULL) {
+        preorderPar(root->right);
+    }
+    printf(") ");
 }
 
 /* Function to parse an integer from the string */
