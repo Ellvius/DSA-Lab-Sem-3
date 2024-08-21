@@ -378,6 +378,9 @@ node* Path(node *K,int k){
 
 /* Prints the path of the successor if it exist. Else prints the height of the tree */
 void AVL_SuccessorPath(node *T, int n){
+    if(T== NULL){
+        printf("0\n");
+    }
     node* temp = successor(T, n);
     int height = -1;
     if(temp == NULL){
@@ -479,7 +482,7 @@ int main() {
     int index = 0;
     int n1, n2, n;
     int i = 0;
-    int count = 0;
+    
 
     fgets(parenthesis, 1000, stdin);
     T = parenthesisToTree(parenthesis, &index);
@@ -503,6 +506,7 @@ int main() {
             printf("\n");
         }
         else if(op == 'b'){
+            int count = 0;
             scanf("%d", &n1);
             scanf("%d", &n2);
             T = AVL_RangeDelete(T, n1, n2, &count);
