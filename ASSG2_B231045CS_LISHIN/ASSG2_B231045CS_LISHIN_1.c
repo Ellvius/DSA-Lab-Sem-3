@@ -265,7 +265,7 @@ node *AVL_delete(node *T, int n, int *lr, int *rr ){
         T = delete(T,n,lr,rr);
     }
     else {
-        printf("-1\n");       
+        printf("-1");       
     }
     return T;
 }
@@ -300,8 +300,10 @@ int main(){
             AVL_find(T,num);
         }
         else if(op == 'p'){
-            AVL_postorder(T);
-            printf("\n");
+            if(T!=NULL){
+                AVL_postorder(T);
+                printf("\n");
+            }           
         }
         else if(op == 's'){
             AVL_rotations(T, leftRotation, rightRotation);
