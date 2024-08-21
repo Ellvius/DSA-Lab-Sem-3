@@ -168,57 +168,85 @@ node *parenthesisToTree(char s[], int *index) {
     return newNode;
 }
 
-// /* function to delete the node in an avl tree */
-// node *delete(node *T,int n, int *count){
+/* function to delete the node in an avl tree */
+node *delete(node *T,int n, int *count){
 
-//     if(T == NULL) {
-//         return T;
-//     }
-//     if( n < T->key){
-//         T->left = delete(T->left, n, count);
-//     }
-//     else if(n > T->key){
-//         T->right = delete(T->right, n, count);
-//     }
-//    // we reach the node
-//     else {
-//         if (T->left == NULL && T->right == NULL) { // Case 1: The node has no childrenII
-//             node *temp = T;
-//             T = NULL;  
-//             free(temp);  
-//             count++;
-//         }
-//         else if (T->left == NULL) {             // Case 2: The node has only a right child
-//             node *temp = T;
-//             T = T->right;  
-//             free(temp);  
-//             count++;
-//         }
-//         else if (T->right == NULL) {            // Case 2: The node has only a left child
-//             node *temp = T;
-//             T = T->left;  
-//             free(temp);  
-//             count++;
-//         }
-//         else {                                      // case 3 : The node has both children
-//             node *temp = T->right;
-//             while(temp->left != NULL){
-//                 temp = temp->left;
-//             }
-//             T->key = temp->key;
-//             T->right = delete(T->right, n, count);
-//         }
+    if(T == NULL) {
+        return T;
+    }
+    if( n < T->key){
+        T->left = delete(T->left, n, count);
+    }
+    else if(n > T->key){
+        T->right = delete(T->right, n, count);
+    }
+   // we reach the node
+    else {
+        if (T->left == NULL && T->right == NULL) { // Case 1: The node has no childrenII
+            node *temp = T;
+            T = NULL;  
+            free(temp);  
+            (*count)++;
+        }
+        else if (T->left == NULL) {             // Case 2: The node has only a right child
+            node *temp = T;
+            T = T->right;  
+            free(temp);  
+            (*count)++;
+        }
+        else if (T->right == NULL) {            // Case 2: The node has only a left child
+            node *temp = T;
+            T = T->left;  
+            free(temp);  
+            (*count)++;
+        }
+        else {                                      // case 3 : The node has both children
+            node *temp = T->right;
+            while(temp->left != NULL){
+                temp = temp->left;
+            }
+            T->key = temp->key;
+            T->right = delete(T->right, temp->key, count);
+        }
     
-//     }
-// }
+    }
+    if(T==NULL){
+        return T;
+    }
 
-// int AVL_RangeDelete(node *root, int n1, int n2){
-//     int count = 0;
-//     for(int i =n1; i<=n2; i++){
-//         delete(root, i, &count);
-//     }
-//     return count;
-// }
+    // Updating the heights of the deleted node
+    T->height = 1+ max(height(T->left), height(T->right));
+
+    if(!isBalance(T)){
+        int balfactor = height(T->left) - height(T->right);
+        if(balfactor > 1 && height(T->left->left) >= height(T->left->right)){  // left left
+            return rightRotate(T);
+        }
+
+        if(balfactor > 1 && height(T->left->left) < height(T->left->right)){
+            T->left = leftRotate(T->left);
+            return rightRotate(T);
+        }
+
+        if(balfactor < -1 && height(T->right->left)<= height(T->right->right)){
+            return leftRotate(T);
+        }
+
+        if(balfactor < -1 && height(T->right->left)> height(T->right->right)){
+            T->right = rightRotate(T->right);
+            return leftRotate(T);
+        }
+    }
+   
+   return T;
+}
+
+node* AVL_RangeDelete(node *root, int n1, int n2, int *count){
+    for(int i =n1; i<=n2; i++){
+        root = delete(root, i, count);
+    }
+    return root;
+}
 
 /* Preorder traversal of the tree */
 void preorder(node *root) {
@@ -257,19 +285,19 @@ int main() {
             preorderPar(T);
             printf("\n");
         }
-        // else if(op == 'b'){
-        //     scanf("%d", &n1);
-        //     scanf("%d", &n2);
-        //     count = AVL_RangeDelete(T, n1, n2);
-        //     if(count == 0){
-        //         printf("-1\n");
-        //     }
-        //     else {
-        //         printf("%d ", count);
-        //     }
-        //     preorder(T);
-        //     printf("\n");
-        // }
+        else if(op == 'b'){
+            scanf("%d", &n1);
+            scanf("%d", &n2);
+            T = AVL_RangeDelete(T, n1, n2, &count);
+            if(count == 0){
+                printf("-1\n");
+            }
+            else {
+                printf("%d ", count);
+            }
+            preorder(T);
+            printf("\n");
+        }
         // else if(op == 'c'){
         //     scanf("%d", &n);
         //     AVL_SuccessorPath(T, n);
