@@ -26,7 +26,7 @@ int QuadraticProbing(int hashTable[],int a[], int n, int m){
         int hashIndex = a[i] % n;
         int index = hashIndex;
         while(hashTable[hashIndex]!=DELETED) {
-            hashIndex = (index + (probe*probe)) % n;
+            hashIndex = (index + (probe*probe)) % n;  // each time the index is same so don't update the hashIndex
             c++;
             probe++;
         }
