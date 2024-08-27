@@ -17,7 +17,15 @@ void insert(node *hashTable[], int key, int n){
     node *newNode = createNode(key);
     int hashIndex = key % n;
 
-    newNode->next = hashTable[hashIndex];
+    node *temp = hashTable[hashIndex];      // search whether the key is there. Print -1 if it is there
+    while(temp!= NULL){
+        if(temp->key == key)  {
+            printf("-1\n");
+            return;
+        }
+        temp = temp->next;
+    }
+    newNode->next = hashTable[hashIndex];      // insert the new node at the head 
     hashTable[hashIndex] = newNode;
 }
 
@@ -51,6 +59,7 @@ int main(){
             printf("\n");
         }
     }
+    free(hashTable);
 
     return 0;
 }
