@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
+#include<ctype.h>
 
 #define NAMELENGTH 100
 
@@ -48,20 +49,8 @@ void insert(node *hashTable[], student *s) {
         temp = temp->next;
     }
 
-    node *t = hashTable[hashIndex];
-    node *prev = NULL;
-    while (t != NULL && strcmp(t->st->first_name, s->first_name) < 0) {
-        prev = t;
-        t = t->next;
-    }
-    
-    if (prev == NULL) {
-        newNode->next = hashTable[hashIndex];  
-        hashTable[hashIndex] = newNode;  
-    } else {
-        prev->next = newNode;  
-        newNode->next = t;  
-    }
+    newNode->next = hashTable[hashIndex];
+    hashTable[hashIndex] = newNode;
 }
 
 
@@ -69,9 +58,10 @@ void printHashTable(node *hashTable[]) {
     for (int i = 0; i < 4; i++) {
         node *temp = hashTable[i];
         while (temp != NULL) {
-            printf("%s %s %d\n", temp->st->first_name, temp->st->rollno, temp->st->age);
+            printf("%s %s %d  ", temp->st->first_name, temp->st->rollno, temp->st->age);
             temp = temp->next;
         }
+        printf("\n");
     }
 }
 
@@ -79,20 +69,66 @@ void GroupIndexAndSplit(node *hashTable[], char name[]) {
     for (int index = 0; index < 4; index++) {
         node *temp = hashTable[index];
         while (temp != NULL) {
-            printf("t3\n");
             if (strcmp(temp->st->first_name, name) == 0) {
                 printf("%d\n", index);
                 return;
             }
             temp = temp->next;
-            printf("t2\n");
         }
     }
-    printf("t1\n");
 }
 
+void GroupCountAndList(node *hashTable[], int k) {
+    node *temp = hashTable[k];
+    int count = 0;
+    char a[100][NAMELENGTH];  
+    int i = 0;
+
+    while (temp != NULL) {
+        strcpy(a[i], temp->st->first_name);  
+        count++;
+        i++;
+        temp = temp->next;
+    }
+
+    for (int j = 0; j < count - 1; j++) {
+        for (int l = j + 1; l < count; l++) {
+            if (strcmp(a[j], a[l]) > 0) {
+                char tempName[NAMELENGTH];
+                strcpy(tempName, a[j]);
+                strcpy(a[j], a[l]);
+                strcpy(a[l], tempName);
+            }
+        }
+    }
+    printf("%d ", count);
+
+    for (int j = 0; j < count; j++) {
+        printf("%s ", a[j]);
+    }
+    printf("\n");
+}
+
+void GroupListByBranch(node *hashTable[], int k, char branch[]){
+    node* temp = hashTable[k];
+    int count= 0;
+
+    while(temp!=NULL){
+        if(toupper(temp->st->rollno[7]) == toupper(branch[0]) && toupper(temp->st->rollno[8]) == toupper(branch[1])){
+            count++;
+            printf("%s ", temp->st->first_name);
+        }
+        temp = temp->next;
+    }
+    if(count == 0) printf("-1");
+    printf("\n");
+}
+
+
+
 int main() {
-    int n;
+    int n, k;
+    char branch[3];
     scanf("%d", &n);
     
     node **hashTable = (node **)malloc(4 * sizeof(node *));
@@ -117,7 +153,17 @@ int main() {
         if (op == 'a') {
             scanf("%s", name);
             GroupIndexAndSplit(hashTable, name);
-        } else if (op == 'f') {
+        } 
+        else if (op == 'b') {
+            scanf("%d", &k);
+            GroupCountAndList(hashTable, k);
+        } 
+        else if (op == 'c') {
+            scanf("%d", &k);
+            scanf("%s", branch);
+            GroupListByBranch(hashTable, k, branch);
+        } 
+        else if (op == 'f') {
             break;
         }
     }
