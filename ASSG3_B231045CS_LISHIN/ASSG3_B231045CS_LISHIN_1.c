@@ -124,11 +124,23 @@ void GroupListByBranch(node *hashTable[], int k, char branch[]){
     printf("\n");
 }
 
-
+void StudentDetails(node *hashTable[], char roll[]) {
+    for (int i = 0; i < 4; i++) {
+        node *temp = hashTable[i];
+        while (temp != NULL) {
+            if (strcmp(temp->st->rollno, roll) == 0) {
+                printf("%s %d %c%c\n", temp->st->first_name, temp->st->age, temp->st->rollno[7], temp->st->rollno[8]);
+                return;
+            }
+            temp = temp->next;
+        }
+    }
+    printf("-1\n");
+}
 
 int main() {
     int n, k;
-    char branch[3];
+    char branch[3], roll[10];
     scanf("%d", &n);
     
     node **hashTable = (node **)malloc(4 * sizeof(node *));
@@ -162,6 +174,10 @@ int main() {
             scanf("%d", &k);
             scanf("%s", branch);
             GroupListByBranch(hashTable, k, branch);
+        } 
+        else if (op == 'd') {
+            scanf("%s", roll);
+            StudentDetails(hashTable, roll);
         } 
         else if (op == 'f') {
             break;
