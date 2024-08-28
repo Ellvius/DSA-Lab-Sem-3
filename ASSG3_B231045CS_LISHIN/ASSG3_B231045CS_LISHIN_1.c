@@ -138,8 +138,36 @@ void StudentDetails(node *hashTable[], char roll[]) {
     printf("-1\n");
 }
 
+void GroupTransferAllByBranch(node *hashTable[], int source, int target, char branch[]){
+    node *temp = hashTable[source];
+    node *prev = NULL;
+    int count = 0;
+
+    while (temp != NULL) {
+        if (toupper(temp->st->rollno[7]) == toupper(branch[0]) && toupper(temp->st->rollno[8]) == toupper(branch[1])) {
+            node *newNode = temp;  
+
+            if (prev == NULL) {
+                hashTable[source] = temp->next;  
+            } else {
+                prev->next = temp->next;  
+            }
+            temp = temp->next;  
+
+            newNode->next = hashTable[target];
+            hashTable[target] = newNode;
+            count++;  
+        } else {
+            prev = temp;
+            temp = temp->next;  
+        }
+    }
+    printf("%d\n", count);
+}
+
+
 int main() {
-    int n, k;
+    int n, k, source, target;
     char branch[3], roll[10];
     scanf("%d", &n);
     
@@ -156,7 +184,6 @@ int main() {
         insert(hashTable, s);
     }
 
-    printHashTable(hashTable);
 
     char name[NAMELENGTH];
     char op;
@@ -178,6 +205,15 @@ int main() {
         else if (op == 'd') {
             scanf("%s", roll);
             StudentDetails(hashTable, roll);
+        } 
+        else if (op == 'e') {
+            scanf("%d", &source);
+            scanf("%d", &target);
+            scanf("%s", branch);
+            GroupTransferAllByBranch(hashTable, source, target, branch);
+        }
+        else if (op == 'p') {
+            printHashTable(hashTable);
         } 
         else if (op == 'f') {
             break;
