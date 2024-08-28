@@ -25,8 +25,38 @@ void insert(node *hashTable[], int key, int n){
         }
         temp = temp->next;
     }
-    newNode->next = hashTable[hashIndex];      // insert the new node at the head 
-    hashTable[hashIndex] = newNode;
+
+    node* t = hashTable[hashIndex];
+    node *prev = NULL;
+    while(t!=NULL && t->key < key){
+        prev = t;
+        t = t->next;
+    }
+    if(prev == NULL){
+        hashTable[hashIndex] = newNode;
+        return;
+    }
+    newNode->next = t;
+    prev->next = newNode;
+}
+
+void search(node *hashTable[], int searchKey, int n){
+    int hashIndex = searchKey % n;
+    int position = 1; 
+    int flag = 0;
+    node * temp = hashTable[hashIndex];
+    while(temp!=NULL){
+        if(temp->key == searchKey){
+            flag = 1;
+            break;
+        }
+        position++;
+        temp = temp->next;
+    }
+
+    if(flag == 1){
+        printf("%d %d\n", hashIndex, position);
+    }
 }
 
 
@@ -44,6 +74,10 @@ int main(){
         if(op == 'a'){
             scanf("%d", &key);
             insert(hashTable, key, n);
+        }
+        else if(op == 'b'){
+            scanf("%d", &key);
+            search(hashTable, key, n);
         }
         else if(op == 'f'){
             break;
