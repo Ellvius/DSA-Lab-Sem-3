@@ -57,6 +57,9 @@ void search(node *hashTable[], int searchKey, int n){
     if(flag == 1){
         printf("%d %d\n", hashIndex, position);
     }
+    else {
+        printf("-1\n");
+    }
 }
 
 
