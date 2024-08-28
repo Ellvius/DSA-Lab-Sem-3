@@ -62,6 +62,43 @@ void search(node *hashTable[], int searchKey, int n){
     }
 }
 
+void delete(node *hashTable[], int searchKey, int n){
+    int hashIndex = searchKey % n;
+    int position = 1;
+    
+    node *temp = hashTable[hashIndex];
+    node *prev = NULL;
+
+
+    while(temp!=NULL){
+        if(temp->key> searchKey){
+            printf("-1\n");
+            return;
+        }
+        if(temp->key == searchKey){
+            break;
+        }
+        position++;
+        prev = temp;
+        temp = temp->next;
+    }
+
+    if(temp == NULL){
+        printf("-1\n");
+        return;
+    }
+    
+    if(prev == NULL){
+        hashTable[hashIndex] = hashTable[hashIndex]->next;
+        return;
+    }
+    else {
+        prev->next = temp->next;
+        free(temp);
+    }
+    printf("%d %d\n", hashIndex, position);
+}
+
 
 int main(){
     int n, key;
@@ -81,6 +118,10 @@ int main(){
         else if(op == 'b'){
             scanf("%d", &key);
             search(hashTable, key, n);
+        }
+        else if(op == 'c'){
+            scanf("%d", &key);
+            delete(hashTable, key, n);
         }
         else if(op == 'f'){
             break;
