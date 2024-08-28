@@ -62,7 +62,7 @@ void search(node *hashTable[], int searchKey, int n){
     }
 }
 
-void delete(node *hashTable[], int searchKey, int n){
+int delete(node *hashTable[], int searchKey, int n){
     int hashIndex = searchKey % n;
     int position = 1;
     
@@ -73,7 +73,7 @@ void delete(node *hashTable[], int searchKey, int n){
     while(temp!=NULL){
         if(temp->key> searchKey){
             printf("-1\n");
-            return;
+            return 0;
         }
         if(temp->key == searchKey){
             break;
@@ -85,23 +85,51 @@ void delete(node *hashTable[], int searchKey, int n){
 
     if(temp == NULL){
         printf("-1\n");
-        return;
+        return 0;
     }
-    
+
     if(prev == NULL){
         hashTable[hashIndex] = hashTable[hashIndex]->next;
-        return;
+        return 1;
     }
     else {
         prev->next = temp->next;
         free(temp);
     }
     printf("%d %d\n", hashIndex, position);
+    return 1;
+}
+
+void update(node *hashTable[], int oldKey, int newKey, int n){
+    int hashIndex = oldKey % n;
+    node *temp = hashTable[hashIndex];
+    
+    while(temp!=NULL){
+        if(temp->key == newKey){
+            printf("-1\n");
+            return;
+        }
+        temp= temp->next;
+    }
+
+    int flag = delete(hashTable, oldKey, n);
+    if(flag == 1){
+        insert(hashTable, newKey, n);
+    }
+}
+
+void printElementsInChain(node *hashTable[], int index, int n){
+    node *temp = hashTable[index];
+    while(temp!=NULL){
+        printf("%d ", temp->key);
+        temp = temp->next;
+    }
+    printf("\n");
 }
 
 
 int main(){
-    int n, key;
+    int n, key, newKey;
     scanf("%d", &n);
     node **hashTable = (node **)malloc(n * sizeof(node *));
     for(int i = 0; i < n; i++){
@@ -123,20 +151,20 @@ int main(){
             scanf("%d", &key);
             delete(hashTable, key, n);
         }
+        else if(op == 'd'){
+            scanf("%d", &key);
+            scanf("%d", &newKey);
+            update(hashTable, key, newKey, n);
+        }
+        else if(op == 'e'){
+            scanf("%d", &key);
+            printElementsInChain(hashTable, key, n);
+        }
         else if(op == 'f'){
             break;
         }
     }
-    for(int i = 0; i < n; i++){
-        if(hashTable[i] != NULL){
-            node *temp = hashTable[i];
-            while(temp!=NULL){
-                printf("%d ", temp->key);
-                temp = temp->next;
-            }
-            printf("\n");
-        }
-    }
+    
     free(hashTable);
 
     return 0;
