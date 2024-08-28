@@ -33,11 +33,13 @@ void insert(node *hashTable[], int key, int n){
         t = t->next;
     }
     if(prev == NULL){
+        newNode->next = hashTable[hashIndex];  
         hashTable[hashIndex] = newNode;
-        return;
     }
-    newNode->next = t;
-    prev->next = newNode;
+    else {
+        prev->next = newNode;
+        newNode->next = t;
+    }
 }
 
 void search(node *hashTable[], int searchKey, int n){
