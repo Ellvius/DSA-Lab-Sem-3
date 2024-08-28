@@ -14,6 +14,7 @@ node *createNode(int n){
 }
 
 void insert(node *hashTable[], int key, int n){
+    if(key<0) return;
     node *newNode = createNode(key);
     int hashIndex = key % n;
 
@@ -43,6 +44,10 @@ void insert(node *hashTable[], int key, int n){
 }
 
 void search(node *hashTable[], int searchKey, int n){
+    if(searchKey<0) {
+        printf("-1\n");
+        return;
+    }
     int hashIndex = searchKey % n;
     int position = 1; 
     int flag = 0;
@@ -122,11 +127,13 @@ void update(node *hashTable[], int oldKey, int newKey, int n){
 
 void printElementsInChain(node *hashTable[], int index, int n){
     node *temp = hashTable[index];
-    while(temp!=NULL){
-        printf("%d ", temp->key);
-        temp = temp->next;
+    if(temp != NULL){
+        while(temp!=NULL){
+            printf("%d ", temp->key);
+            temp = temp->next;
+        }
+        printf("\n");
     }
-    printf("\n");
 }
 
 
