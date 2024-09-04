@@ -104,7 +104,7 @@ void DeleteKey(int h[], int *heapSize, int n){
         printf("-1\n");
         return;
     }
-    swap(&h[index], &h[*heapSize]);
+    swap(&h[index], &h[(*heapSize)-1]);
     (*heapSize)--;
     heapify(h, index, heapSize);
 
