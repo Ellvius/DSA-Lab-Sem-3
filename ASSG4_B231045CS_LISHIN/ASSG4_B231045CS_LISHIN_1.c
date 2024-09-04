@@ -66,6 +66,7 @@ void ExtractMax( int h[], int *heapSize){
 }
 
 void KthLargest(int h[], int *heapSize, int k) {
+    if(k < 1) return;
     if (k > *heapSize) {
         printf("-1\n");
         return;
