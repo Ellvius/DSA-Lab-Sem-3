@@ -155,7 +155,7 @@ int main(){
         else if(op == 'e'){
             FindMostSevere(PQ, &heapSize);
         }
-        else if(op == 'f'){
+        else if(op == 'g'){
             break;
         }
 
