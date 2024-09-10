@@ -18,3 +18,7 @@ myprogram
 
 # Ignore zip files
 *.zip
+
+# Ignore input and output files
+input.txt
+output.txt
