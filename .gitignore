@@ -25,3 +25,6 @@ output.txt
 
 #Ignore vscode task config files
 *.vscode
+
+# Shell script files
+*.sh
