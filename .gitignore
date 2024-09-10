@@ -22,3 +22,6 @@ myprogram
 # Ignore input and output files
 input.txt
 output.txt
+
+#Ignore vscode task config files
+*.vscode
