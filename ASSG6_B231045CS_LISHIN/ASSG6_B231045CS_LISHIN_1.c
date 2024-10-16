@@ -39,7 +39,7 @@ int dijkstra(int n, int adj[n][n], int source){
 
     for(int i = 0; i < n; i++){
         if(distance[i] == INT_MAX) printf("INF ");
-        printf("%d ", distance[i]);
+        else printf("%d ", distance[i]);
     }
     printf("\n");
 }
@@ -90,16 +90,6 @@ int main(){
             token = strtok(NULL, " ");
         }
     }
-
-    /* To print the input matrix */
-
-    // for(int i = 0; i < n; i++){
-    //     for(int j = 0; j < n; j++){
-    //         printf("%d ", adj[i][j]);
-    //     }
-    //     printf("\n");
-    // }
-    
     int source;
     scanf("%d", &source);
 
