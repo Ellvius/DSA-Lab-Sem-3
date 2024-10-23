@@ -23,6 +23,7 @@ int Sequence(int n, int g[n][n], int start){
         par[n]= -1;
     }
     w[start] = 0;
+    int total = 0;
 
     for(int i = 0; i < n; i++){
         int cur = min(n, mst, w);
@@ -31,6 +32,7 @@ int Sequence(int n, int g[n][n], int start){
 
         if(cur!=start){
             printf("%d %d (%d) ", par[cur], cur, w[cur]);
+            total+=w[cur];
         }
 
         for(int v = 0; v < n; v++){
@@ -43,11 +45,6 @@ int Sequence(int n, int g[n][n], int start){
         }
     }
     printf("\n");
-
-    int total = 0;
-    for(int i = 0; i < n; i++){
-        total+=w[i];
-    }
     return total;
 }
 
