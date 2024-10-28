@@ -33,4 +33,4 @@ This repository contains my solutions to the Data Structures and Algorithms (DSA
 **7. Assignment 7**
    - Graph traversal algorithms
       - Dijkstra's Algorithm
-      - Floyd0-Warshall Algorithm
+      - Floyd-Warshall Algorithm
