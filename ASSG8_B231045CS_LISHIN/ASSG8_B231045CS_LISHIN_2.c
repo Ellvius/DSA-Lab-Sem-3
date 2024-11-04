@@ -18,7 +18,8 @@ void boyerMoore(char t[], char p[]){
     int badcharTable[256];
     badCharTable(p, m, badcharTable);
 
-    int s = 0, index = -1;
+    int s = 0;
+    int index = -1;
     
     while(s<=n-m){
         int j = m-1;
@@ -38,6 +39,7 @@ void boyerMoore(char t[], char p[]){
         }
         s+=shift;
     }
+    printf("%d\n", index);
 }
 
 int main(){
