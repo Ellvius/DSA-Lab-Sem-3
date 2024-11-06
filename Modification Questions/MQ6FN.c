@@ -2,16 +2,44 @@
 #include<string.h>
 #include<stdlib.h>
 
-void floydWarshall(int n, int g[n][n]){
-    for(int k = 0; k < n; k++){
-        for(int i = 0; i < n; i++){
-            for(int j = 0; j < n; j++){
-                if(g[i][k]!=9999 && g[k][j]!=9999 && g[i][k]+g[k][j]<g[i][j]){
-                    g[i][j] = g[i][k] + g[k][j];
-                }
+int min(int n, int vis[], int dis[]){
+    int min  = 9999;
+    int index = -1;
+    for(int i = 0; i < n; i++){
+        if(!vis[i] && dis[i]<=min){
+            min = dis[i];
+            index = i;
+        }
+    }
+    return index;
+}
+
+void djikstra(int source, int n, int g[n][n]){
+    int vis[n], dis[n], path[n];
+    for(int i = 0; i < n; i++){
+        vis[i] = 0;
+        dis[i] = 9999;
+        path[i] = -1;
+    }
+    dis[source] = 0;
+
+    for(int i = 0; i < n; i++){
+        int cur = min(n, vis, dis);
+        if(cur == -1 ) break;
+        vis[cur] = 1;
+
+        for(int v = 0; v < n; v++){
+            if(g[cur][v]!=0 && !vis[v] && dis[cur]!=9999){
+                int path = g[cur][v]+dis[cur];
+                if(dis[v]>path) dis[v] = path;
             }
         }
     }
+
+    for(int i = 0 ; i < n; i++){
+        printf("%d ", dis[i]);
+    }
+    printf("\n");
 }
 
 int main(){
@@ -20,7 +48,7 @@ int main(){
     int adjlist[n][n];
     for(int i = 0; i < n; i++){
         for(int j = 0; j < n; j++){
-            adjlist[i][j] = 9999;
+            adjlist[i][j] = 0;
         }
     }
 
@@ -45,7 +73,7 @@ int main(){
         int j = 0;
         while(token!=NULL){
             int num = atoi(token);
-            while(j < n && adjlist[i][j]==9999) j++;
+            while(j < n && adjlist[i][j]==0) j++;
             adjlist[i][j] = num;
             token = strtok(NULL, " ");
             j++;
@@ -55,14 +83,6 @@ int main(){
     int source;
     scanf("%d", &source);
 
-    for(int i = 0; i < n; i++){
-        adjlist[i][i] = 0;
-    }
-    floydWarshall(n, adjlist);
-
-    for(int i = 0; i < n; i++){
-        printf("%d ", adjlist[source-1][i]);
-    }
-    printf("\n");
+    djikstra(source-1, n, adjlist);
     return 0;
 }
